@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uk">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
+        <link rel="stylesheet" href="./assets/css/style.css" />
+        <title>Project</title>
+    </head>
+    <body>
+        <main class="main">
+            <div class="liquid-glass auth-component" id="auth-container">
+                <div class="liquid-glass--bend"></div>
+                <div class="liquid-glass--face"></div>
+                <div class="liquid-glass--edge"></div>
+                <div class="glass-drag-handle"></div>
+
+                <div class="liquid-glass__menu">
+                    <div class="auth-component">
+                        <form class="login-form">
+                            <h2>Приєднатись</h2>
+                            <div class="input-group">
+                                <input type="text" placeholder="Введіть ІНН" data-inn />
+                                <i class="ri-user-line"></i>
+                            </div>
+                            <div class="input-group hidden" data-pass-group>
+                                <input type="password" placeholder="Введіть пароль" data-pass autocomplete />
+                                <i class="ri-lock-line"></i>
+                            </div>
+                            <button type="submit">Відправити</button>
+                            <p data-error id="error-msg"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-content hidden" id="app">
+                <h1>Ласкаво просимо до системи!</h1>
+            </div>
+        </main>
+
+        <!-- SVG FILTER -->
+        <svg style="display: none" xmlns="http://www.w3.org/2000/svg">
+            <filter id="filter" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
+                <feTurbulence type="fractalNoise" baseFrequency="0.003 0.007" numOctaves="1" result="turbulence" />
+                <feDisplacementMap
+                    in="SourceGraphic"
+                    in2="turbulence"
+                    scale="200"
+                    xChannelSelector="R"
+                    yChannelSelector="G"
+                />
+            </filter>
+        </svg>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
+        <script src="./assets/js/main.js"></script>
+        <script src="./assets/js/auth.js"></script>
+
+        <script>
+            const dummyUsers = {
+                1234567890: { password: "pass123", workdays: [1, 2, 3, 4, 5] },
+                9876543210: { password: "qwerty", workdays: [2, 4, 6] },
+            };
+
+            new AuthForm(".auth-component", {
+                users: dummyUsers,
+                onSuccess: (user) => {
+                    const auth = document.querySelector(".auth-component");
+                    const app = document.querySelector("#app");
+
+                    gsap.to(auth, {
+                        opacity: 0,
+                        duration: 1,
+                        onComplete: () => {
+                            auth.classList.add("hidden");
+                            app.classList.remove("hidden");
+                            gsap.fromTo(app, { opacity: 0 }, { opacity: 1, duration: 1 });
+                        },
+                    });
+
+                    console.log("User logged in:", user);
+                },
+            });
+        </script>
+    </body>
+</html>
