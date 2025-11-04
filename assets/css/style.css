@@ -16,9 +16,23 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url(../images/bg.jpg) center/cover no-repeat;
     height: 100vh;
     width: 100vw;
+    background: linear-gradient(120deg, #1a2a6c, #b21f1f, #fdbb2d);
+    background-size: 200% 200%;
+    animation: gradientMove 10s ease infinite;
+}
+
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .liquid-glass {
@@ -28,6 +42,7 @@ html {
     border-radius: 26px;
     overflow: hidden;
     z-index: 1000;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.2), 0 0 80px rgba(0, 0, 0, 0.2);
 }
 
 .liquid-glass__menu {
@@ -89,7 +104,7 @@ html {
 }
 
 .liquid-glass .login-form h2 {
-    color: #000;
+    color: #fff;
     font-size: 2.5rem;
     margin-bottom: 1rem;
     font-weight: 300;
@@ -140,13 +155,6 @@ html {
     display: none;
 }
 
-.liquid-glass #error-msg {
-    color: red;
-    font-weight: 500;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
 .app-content {
     color: #141414;
     text-align: center;
@@ -156,4 +164,102 @@ html {
 
 .app-content.hidden {
     display: none;
+}
+
+.liquid-glass select {
+    width: 100%;
+    padding: 16px 35px 16px 14px;
+    border: none;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.75);
+    font-size: 1.2rem;
+    outline: none;
+    color: #000;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.liquid-glass select:hover {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.liquid-glass select option {
+    position: absolute;
+    top: 200px;
+    left: 0;
+    border-radius: 26px;
+    background: rgba(20, 20, 40, 0.8);
+    color: #fff;
+    padding: 1rem;
+    border: none;
+    cursor: pointer;
+}
+
+.liquid-glass select option:hover {
+    background: rgba(0, 180, 255, 0.3);
+}
+
+.liquid-glass [data-username] {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #4de04d;
+    text-align: center;
+}
+
+/* повідомлення */
+.liquid-glass [data-error] {
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    opacity: 0;
+}
+
+/* повідомлення - пусте */
+.liquid-glass [data-error]:empty {
+    display: none;
+}
+
+/* повідомлення - не пусте */
+.liquid-glass [data-error]:not(:empty) {
+    opacity: 1;
+}
+
+/* повідомлення - помилка */
+.liquid-glass [data-error].error {
+    color: #df4b4b;
+    background: rgba(14, 14, 14, 0.5);
+    box-shadow: 0 0 8px rgba(14, 14, 14, 0.5);
+}
+
+/* повідомлення - інформація  */
+.liquid-glass [data-error].info {
+    color: #fff;
+    background: rgba(0, 123, 255, 0.4);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.4);
+}
+
+/* повідомлення - успіх  */
+.liquid-glass [data-error].success {
+    color: #fff;
+    background: rgba(40, 167, 69, 0.4);
+    box-shadow: 0 0 8px rgba(40, 167, 69, 0.4);
+}
+
+.liquid-glass input:disabled,
+.liquid-glass select:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    color: #ddd;
+    background: rgba(255, 255, 255, 0.1);
 }
