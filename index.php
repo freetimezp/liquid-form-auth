@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="./assets/css/style.css" />
         <title>Project</title>
     </head>
+
     <body>
         <main class="main">
             <div class="liquid-glass auth-component" id="auth-container">
@@ -17,7 +18,7 @@
 
                 <div class="liquid-glass__menu">
                     <div class="auth-component">
-                        <form class="login-form" id="login-form">
+                        <form class="login-form" id="login-form" >
                             <h2>Приєднатись</h2>
 
                             <!-- перелік магазинів -->
@@ -69,32 +70,16 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
-        <script src="./assets/js/main.js"></script>
         <script src="./assets/js/auth.js"></script>
+        <script src="./assets/js/main.js"></script>
 
         <script>
-            const dummyUsers = {
-                1234567890: {
-                    name: "Олена Петренко",
-                    password: "pass123",
-                    magazines: ["shop1", "shop2"],
-                    cashRegisters: ["SR1", "DJ7", "BL4"],
-                    workdays: [1, 2, 3, 4, 5],
-                },
-                9876543210: {
-                    name: "Іван Коваль",
-                    password: "qwerty",
-                    magazines: ["shop3"],
-                    cashRegisters: ["SR1"],
-                    workdays: [2, 4, 6],
-                },
-            };
-
             new AuthForm(".auth-component", {
-                users: dummyUsers,
                 onSuccess: (user) => {
                     const auth = document.querySelector(".auth-component");
                     const app = document.querySelector("#app");
+
+                    console.log("User logged in:", user);
 
                     gsap.to(auth, {
                         opacity: 0,
@@ -105,10 +90,9 @@
                             gsap.fromTo(app, { opacity: 0 }, { opacity: 1, duration: 1 });
                         },
                     });
-
-                    console.log("User logged in:", user);
                 },
             });
         </script>
     </body>
 </html>
+

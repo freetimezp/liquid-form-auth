@@ -20,7 +20,7 @@ class AuthForm {
         this.form.addEventListener("submit", (e) => this.handleSubmit(e));
     }
 
-    handleSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
         const inn = this.innInput.value.trim();
         const magazine = this.magazineSelect.value.trim();
@@ -28,39 +28,49 @@ class AuthForm {
         const cash = this.cashSelect.value.trim();
         this.error.textContent = "";
 
-        // Step 1: перевірка, чи обран магазин
+        // Step 1: check store selection
         if (!magazine) return this.showMessage("Оберіть магазин!", "error");
 
-        // Step 2: перевірка для ІННб лише цифри та довжина 10 символів
+        // Step 2: validate IIN format
         if (!/^\d{10}$/.test(inn)) return this.showMessage("ІНН має містити лише 10 цифр!", "error");
 
-        const user = this.users[inn];
-        if (!user) return this.showMessage("Користувача не знайдено!", "error");
+        // --- ✅ CALL PHP CONTROLLER HERE ---
+        let user;
+        try {
+            const response = await fetch("./controllers/check_inn.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ inn }),
+            });
 
-        // Step 3: перевірка, чи належить користувач до цього магазину
+            const data = await response.json();
+            if (data.status === "error") return this.showMessage(data.message, "error");
+            user = data.user;
+        } catch (err) {
+            return this.showMessage("Помилка сервера!", "error");
+        }
+
+        // Step 3: check if user belongs to store
         if (!user.magazines.includes(magazine))
             return this.showMessage("У вас немає доступу до цього магазину!", "error");
 
-        // Step 4: перевірка робочого дня
+        // Step 4: check workday
         const today = new Date().getDay();
         if (!user.workdays.includes(today)) return this.showMessage("Сьогодні не ваш робочий день!", "error");
 
-        // Step 5: показуємо пароль, якщо пройдені перевірки вище
+        // Step 5: show password and cash fields
         if (this.passGroup.classList.contains("hidden")) {
             this.passGroup.classList.remove("hidden");
             this.usernameDisplay.textContent = `Вітаємо, ${user.name}!`;
             this.usernameDisplay.classList.remove("hidden");
-
-            // блокуємо зміну магазину та ІНН, якщо перевірка вже пройдена
             this.magazineSelect.disabled = true;
             this.innInput.disabled = true;
 
-            // показуємо перелік касових апаратів, якщо пройдені перевірки вище
+            // Populate cash registers
             this.cashSelect.innerHTML = "";
             if (user.cashRegisters.length === 1) {
                 const reg = user.cashRegisters[0];
                 this.cashSelect.innerHTML = `<option value="${reg}">Каса № ${reg}</option>`;
-
                 this.cashSelect.disabled = true;
             } else {
                 this.cashSelect.innerHTML = `<option value="">Оберіть касу</option>`;
@@ -69,17 +79,16 @@ class AuthForm {
                 });
             }
             this.cashGroup.classList.remove("hidden");
-
             return this.showMessage("Будь ласка, введіть пароль для входу!", "info");
         }
 
-        // Step 6: перевірка пароля
+        // Step 6: check password
         if (pass !== user.password) return this.showMessage("Невірний пароль!", "error");
 
-        // Step 7: перевірка. чи обрав користувач касовий апарат
+        // Step 7: check cash register
         if (!cash) return this.showMessage("Оберіть касу!", "error");
 
-        // Step 8: повідомлення про успіх
+        // Step 8: success
         this.showMessage("Успішний вхід!", "success");
         setTimeout(() => this.onSuccess(user), 800);
     }
