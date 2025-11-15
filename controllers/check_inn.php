@@ -9,7 +9,7 @@ $users = [
         "password" => "111111",
         "magazines" => ["shop1", "shop2"],
         "cashRegisters" => ["SR1", "DJ7", "BL4"],
-        "workdays" => [1, 2, 3, 4, 5],
+        "workdays" => [1, 2, 3, 4, 6],
     ],
     "9876543210" => [
         "name" => "Іван Коваль",

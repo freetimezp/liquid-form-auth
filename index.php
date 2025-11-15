@@ -1,98 +1,107 @@
 <!DOCTYPE html>
 <html lang="uk">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-        <link rel="stylesheet" href="./assets/css/style.css" />
-        <title>Project</title>
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Авторизація</title>
 
-    <body>
-        <main class="main">
-            <div class="liquid-glass auth-component" id="auth-container">
-                <div class="liquid-glass--bend"></div>
-                <div class="liquid-glass--face"></div>
-                <div class="liquid-glass--edge"></div>
-                <div class="glass-drag-handle"></div>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
-                <div class="liquid-glass__menu">
-                    <div class="auth-component">
-                        <form class="login-form" id="login-form" >
-                            <h2>Приєднатись</h2>
+<body class="bg-light d-flex justify-content-center align-items-center vh-100">
 
-                            <!-- перелік магазинів -->
-                            <div class="input-group">
-                                <select data-magazine>
-                                    <option value="">Оберіть магазин</option>
-                                    <option value="shop1">Магазин №1</option>
-                                    <option value="shop2">Магазин №2</option>
-                                    <option value="shop3">Магазин №3</option>
-                                </select>
-                                <i class="ri-store-2-line"></i>
-                            </div>
+<div class="container" style="max-width: 480px;">
 
-                            <!-- ІНН користувача -->
-                            <div class="input-group">
-                                <input type="text" placeholder="Введіть ІНН" data-inn />
-                                <i class="ri-user-line"></i>
-                            </div>
+    <!-- LOGIN CARD -->
+    <div id="auth-card" class="card shadow-sm">
+        <div class="card-body">
 
-                            <!-- ім'я користувача -->
-                            <p class="hidden" data-username></p>
+            <h3 class="text-center mb-4">Вхід до системи</h3>
 
-                            <!-- пароль -->
-                            <div class="input-group hidden" data-pass-group>
-                                <input type="password" placeholder="Введіть пароль" data-pass autocomplete="off" />
-                                <i class="ri-lock-line"></i>
-                            </div>
+            <form id="login-form">
 
-                            <!-- касовий апарат -->
-                            <div class="input-group hidden" data-cash-group>
-                                <select data-cash></select>
-                                <i class="ri-money-dollar-circle-line"></i>
-                            </div>
-
-                            <!-- кнопка -->
-                            <button type="submit">Відправити</button>
-
-                            <!-- повідомлення -->
-                            <p data-error id="error-msg"></p>
-                        </form>
-                    </div>
+                <!-- Магазин -->
+                <div class="mb-3">
+                    <label class="form-label">Оберіть магазин</label>
+                    <select class="form-select" data-magazine>
+                        <option value="">Оберіть магазин...</option>
+                        <option value="shop1">Магазин №1</option>
+                        <option value="shop2">Магазин №2</option>
+                        <option value="shop3">Магазин №3</option>
+                    </select>
                 </div>
-            </div>
 
-            <div class="app-content hidden" id="app">
-                <h1>Ласкаво просимо до системи!</h1>
-            </div>
-        </main>
+                <!-- ІНН -->
+                <div class="mb-3">
+                    <label class="form-label">ІНН</label>
+                    <input type="text" class="form-control" data-inn placeholder="Введіть ІНН">
+                </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/Draggable.min.js"></script>
-        <script src="./assets/js/auth.js"></script>
-        <script src="./assets/js/main.js"></script>
+                <!-- Вітання -->
+                <p class="text-success fw-semibold mb-3 d-none" data-username></p>
 
-        <script>
-            new AuthForm(".auth-component", {
-                onSuccess: (user) => {
-                    const auth = document.querySelector(".auth-component");
-                    const app = document.querySelector("#app");
+                <!-- Пароль -->
+                <div class="mb-3 d-none" data-pass-group>
+                    <label class="form-label">Пароль</label>
+                    <input type="password" class="form-control" data-pass placeholder="Введіть пароль">
+                </div>
 
-                    console.log("User logged in:", user);
+                <!-- Каса -->
+                <div class="mb-3 d-none" data-cash-group>
+                    <label class="form-label">Касовий апарат</label>
+                    <select class="form-select" data-cash></select>
+                </div>
 
-                    gsap.to(auth, {
-                        opacity: 0,
-                        duration: 1,
-                        onComplete: () => {
-                            auth.classList.add("hidden");
-                            app.classList.remove("hidden");
-                            gsap.fromTo(app, { opacity: 0 }, { opacity: 1, duration: 1 });
-                        },
-                    });
-                },
-            });
-        </script>
-    </body>
+                <button type="submit" class="btn btn-primary w-100">Увійти</button>
+
+                <!-- Повідомлення -->
+                <div id="error-msg" class="alert mt-3 d-none"></div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- SUCCESS SECTION -->
+    <div id="success-section" class="card shadow-sm d-none mt-3">
+        <div class="card-body">
+            <h3 class="text-success mb-3">Вітаємо!</h3>
+
+            <p class="mb-1"><strong>Користувач:</strong> <span id="user-name"></span></p>
+            <p class="mb-1"><strong>Магазин:</strong> <span id="user-shop"></span></p>
+            <p class="mb-1"><strong>Каса:</strong> <span id="user-cash"></span></p>
+
+            <hr>
+
+            <button class="btn btn-secondary w-100" id="logout-btn">Вихід</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/js/auth.js"></script>
+
+<script>
+    new AuthForm("#login-form", {
+        onSuccess: (user, selectedShop, selectedCash) => {
+            document.getElementById("auth-card").classList.add("d-none");
+
+            // Fill data
+            document.getElementById("user-name").textContent = user.name;
+            document.getElementById("user-shop").textContent = selectedShop;
+            document.getElementById("user-cash").textContent = selectedCash;
+
+            // Show section
+            document.getElementById("success-section").classList.remove("d-none");
+        }
+    });
+
+    document.getElementById("logout-btn").addEventListener("click", () => {
+        location.reload();
+    });
+</script>
+
+</body>
 </html>
-
